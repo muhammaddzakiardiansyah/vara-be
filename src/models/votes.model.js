@@ -17,7 +17,7 @@ const votesModel = {
   },
   findByVote: (id) => {
     return new Promise((resolve, reject) => {
-      db.query("select count(*) as total_vote from votes where vote = ?", [id], (error, result) => {
+      db.query("select count(vote) as total_vote, c.name_candidate from votes v join candidate c on v.vote = c.id where v.vote = ?", [id], (error, result) => {
         if (error) {
           return reject({
             message: error,
@@ -32,9 +32,7 @@ const votesModel = {
     return new Promise((resolve, reject) => {
       const { user_id, vote } = request;
       db.query('select * from votes where user_id = ?', [user_id], (error, resultGet) => {
-        console.log(resultGet.find((id) => user_id));
         if(resultGet.find((id) => user_id)) {
-          console.log(resultGet.length);
           return reject({
             message: 'Kamu telah menggunakan hak suaramu',
           });
